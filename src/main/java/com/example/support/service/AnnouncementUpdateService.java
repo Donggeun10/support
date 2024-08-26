@@ -7,6 +7,7 @@ import com.example.support.exception.NotFoundAnnouncementException;
 import com.example.support.repository.AnnouncementRespository;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,7 @@ public class AnnouncementUpdateService {
         this.announcementRespository = announcementRespository;
     }
 
-
+	@CacheEvict(cacheNames = "apps", key = "#announcementId")
     @Transactional(rollbackFor = {NotFoundAnnouncementException.class, DataSaveException.class})
 	public void updateAnnouncementById(String announcementId, Announcement newAnnouncement) throws NotFoundAnnouncementException, DataSaveException {
 

@@ -9,6 +9,7 @@ import com.example.support.repository.AnnouncementRespository;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -42,6 +43,7 @@ public class AnnouncementReadService {
 
 	}
 
+	@Cacheable(cacheNames = "apps", key = "#id")
 	public AnnouncementResponse findAnnouncementById(String id) throws NotFoundAnnouncementException {
 
 		Optional<Announcement> announcementOpt = announcementRespository.findByAnnounceId(id);

@@ -1,5 +1,6 @@
 package com.example.support.controller;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,6 +25,10 @@ class AnnouncementGetControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private final String userId = "robot";
+    private final String password = "play";
+
+
     @BeforeEach
     void setup() throws Exception {
         mockMvc
@@ -35,6 +40,7 @@ class AnnouncementGetControllerTest {
                     .param("writer", "작성자")
                     .param("beginDatetime", "2024-08-22 00:00:00")
                     .param("endDatetime", "2024-09-22 00:00:00")
+                    .with(httpBasic(userId,password))
             )
             .andDo(print()) // api 수행내역 로그 출력
             .andExpect(status().isCreated()); // response status 201 검증
@@ -73,6 +79,7 @@ class AnnouncementGetControllerTest {
                     .param("writer", "작성자2")
                     .param("beginDatetime", "2024-08-22 00:00:00")
                     .param("endDatetime", "2024-09-22 00:00:00")
+                    .with(httpBasic(userId,password))
             )
             .andDo(print()) // api 수행내역 로그 출력
             .andExpect(status().isCreated()); // response status 201 검증
@@ -93,6 +100,7 @@ class AnnouncementGetControllerTest {
                 multipart("/api/v1/announcement/id/"+DataUtil.getCurrentDatetimeStringValue()) // url
                     .file(pdf3)
                     .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                    .with(httpBasic(userId,password))
             )
             .andDo(print()) // api 수행내역 로그 출력
             .andExpect(status().isAccepted()); // response status 201 검증
@@ -104,6 +112,7 @@ class AnnouncementGetControllerTest {
         mockMvc
             .perform(
                 get("/api/v1/announcements") // url
+                    .with(httpBasic(userId,password))
             )
             .andDo(print())
             .andExpect(status().isOk());
@@ -117,6 +126,7 @@ class AnnouncementGetControllerTest {
                 get("/api/v1/announcements/page") // url
                     .param("page", "0")
                     .param("pageSize", "10")
+                    .with(httpBasic(userId,password))
             )
             .andDo(print())
             .andExpect(status().isOk());
@@ -130,6 +140,7 @@ class AnnouncementGetControllerTest {
                 get("/api/v1/announcements/page") // url
                     .param("page", "2")
                     .param("pageSize", "10")
+                    .with(httpBasic(userId,password))
             )
             .andDo(print())
             .andExpect(status().isBadRequest());
@@ -141,6 +152,7 @@ class AnnouncementGetControllerTest {
         mockMvc
             .perform(
                 get("/api/v1/announcement/id/"+ DataUtil.getCurrentDatetimeStringValue()) // url
+                    .with(httpBasic(userId,password))
             )
             .andDo(print())
             .andExpect(status().isOk());

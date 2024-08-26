@@ -5,12 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -31,7 +34,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 })
 @ToString
 @Getter
-public class Announcement { // 제목, 내용, 작성자, 공지 시작일시, 공지 종료일시, 첨부파일(여러개), 등록잀시, 조회수
+public class Announcement implements Serializable { // 제목, 내용, 작성자, 공지 시작일시, 공지 종료일시, 첨부파일(여러개), 등록잀시, 조회수
 
 	@Id
 	@JsonProperty
@@ -80,8 +83,8 @@ public class Announcement { // 제목, 내용, 작성자, 공지 시작일시, �
 	@Schema(type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp endDatetime;
 
-	@OneToMany(mappedBy = "announcement")
-	private List<AnnouncementFile> files;
+	@OneToMany(mappedBy = "announcement", fetch = FetchType.EAGER)
+	private List<AnnouncementFile> files = new ArrayList<>();
 
 	public void increaseViewCount() {
 		this.viewCount++;

@@ -9,6 +9,7 @@ import com.example.support.repository.AnnouncementRespository;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class AnnouncementDeleteService {
         this.fileManager = fileManager;
     }
 
+	@CacheEvict(cacheNames = "apps", key = "#id")
 	@Transactional
 	public void deleteAnnouncementById(String id) throws NotFoundAnnouncementException {
 
@@ -40,6 +42,7 @@ public class AnnouncementDeleteService {
 		}
 	}
 
+	@CacheEvict(cacheNames = "apps", key = "#id")
 	public void deleteAnnouncementByIdAndFileId(String id, int fileId) throws NotFoundAnnouncementException {
 
 		Optional<Announcement> data = announcementRespository.findByAnnounceId(id);

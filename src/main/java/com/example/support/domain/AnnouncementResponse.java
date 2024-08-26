@@ -2,6 +2,7 @@ package com.example.support.domain;
 
 import com.example.support.entity.AnnouncementFile;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 import lombok.Builder;
@@ -9,7 +10,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class AnnouncementResponse {
+public class AnnouncementResponse implements Serializable {
     // 제목, 내용, 등록일시, 조회수, 작성자,
     private String announceId;
     private String title;

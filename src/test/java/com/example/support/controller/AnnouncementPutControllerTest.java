@@ -1,5 +1,6 @@
 package com.example.support.controller;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -24,6 +25,9 @@ class AnnouncementPutControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private final String userId = "robot";
+    private final String password = "play";
+
     @BeforeEach
     void setup() throws Exception {
         mockMvc
@@ -35,6 +39,7 @@ class AnnouncementPutControllerTest {
                     .param("writer", "작성자")
                     .param("beginDatetime", "2024-08-22 00:00:00")
                     .param("endDatetime", "2024-09-22 00:00:00")
+                    .with(httpBasic(userId,password))
             )
             .andDo(print()) // api 수행내역 로그 출력
             .andExpect(status().isCreated()); // response status 201 검증
@@ -73,6 +78,7 @@ class AnnouncementPutControllerTest {
                     .param("writer", "작성자2")
                     .param("beginDatetime", "2024-08-22 00:00:00")
                     .param("endDatetime", "2024-09-22 00:00:00")
+                    .with(httpBasic(userId,password))
             )
             .andDo(print()) // api 수행내역 로그 출력
             .andExpect(status().isCreated()); // response status 201 검증
@@ -84,12 +90,12 @@ class AnnouncementPutControllerTest {
         mockMvc
             .perform(
                 put("/api/v1/announcement/id/"+ DataUtil.getCurrentDatetimeStringValue()) // url
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .param("title", "공지사항 제목3")
                     .param("content", "공지사항 내용3")
                     .param("writer", "작성자3")
                     .param("beginDatetime", "2024-08-22 00:00:00")
                     .param("endDatetime", "2024-09-02 00:00:00")
+                    .with(httpBasic(userId,password))
             )
             .andDo(print())
             .andExpect(status().isAccepted());

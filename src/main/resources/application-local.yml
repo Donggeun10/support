@@ -6,6 +6,9 @@ logging:
 server:
     port: 8080
     shutdown: graceful
+    tomcat:
+        threads:
+            min-spare: 20
 
 spring:
     application:
@@ -18,10 +21,12 @@ spring:
         hikari:
           pool-name: homework-pool
     jpa:
-        show-sql: true            
+        show-sql: true
+        hibernate:
+            ddl-auto: update
     h2:
         console:
-            enabled: true
+            enabled: false
             path: /h2-console
     threads:
         virtual:

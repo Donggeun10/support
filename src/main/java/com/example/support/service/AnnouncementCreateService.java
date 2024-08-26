@@ -10,6 +10,7 @@ import com.example.support.repository.AnnouncementRespository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,6 +59,7 @@ public class AnnouncementCreateService {
 		return files == null || files.isEmpty();
 	}
 
+	@CacheEvict(cacheNames = "apps", key = "#announcementId")
 	public void appendFilesByAnnouncementId(String announcementId, List<MultipartFile> files) throws DataSaveException {
 
 		try {
