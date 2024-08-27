@@ -1,10 +1,12 @@
 package com.example.support.configuration;
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -21,23 +23,26 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChainBasicAuth(HttpSecurity http) throws Exception {
-        http.csrf(csrfConfigurer ->  // POST 를 차단하는 기능임
+        http.csrf(csrfConfigurer ->
                       csrfConfigurer.ignoringRequestMatchers(new AntPathRequestMatcher("/api/v1/announcement/**"))
+            ) // POST 를 차단하는 기능임
+            .cors(corsConfigurer ->
+                    corsConfigurer.configurationSource(request -> {
+                        CorsConfiguration corsConfiguration = new CorsConfiguration();
+                        corsConfiguration.setAllowCredentials(true);
+                        corsConfiguration.setAllowedOrigins(List.of("http://localhost:8080"));
+                        corsConfiguration.addAllowedHeader("*");
+                        corsConfiguration.setAllowedMethods(List.of(HttpMethod.GET.name(),HttpMethod.POST.name(),HttpMethod.DELETE.name(),HttpMethod.PUT.name()));
+                        return corsConfiguration;
+                    }
+                )
             )
-            .cors(corsConfigurer -> corsConfigurer.configurationSource(request -> {
-                CorsConfiguration corsConfiguration = new CorsConfiguration();
-                corsConfiguration.setAllowCredentials(true);
-                corsConfiguration.addAllowedOrigin("http://localhost:8080");
-                corsConfiguration.addAllowedHeader("*");
-                corsConfiguration.addAllowedMethod("*");
-                return corsConfiguration;
-            }))
             .authorizeHttpRequests(
-                config -> config.requestMatchers("/", "/healthz").permitAll()
-                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/api-docs", "/swagger-ui.html","/actuator/**").permitAll()
+                config -> config.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/api-docs", "/swagger-ui.html","/actuator/**").permitAll()
                     .requestMatchers("/api/v1/announcement/**").authenticated()
                     .requestMatchers("/api/v1/announcements/**").authenticated()
-                    .anyRequest().denyAll())
+                    .anyRequest().denyAll()
+            )
             .httpBasic(
                 httpBasicConfigurer -> httpBasicConfigurer.realmName("Announcement API")
             );

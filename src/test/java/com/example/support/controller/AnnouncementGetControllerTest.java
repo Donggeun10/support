@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.example.support.util.DataUtil;
 import java.io.FileInputStream;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -105,6 +106,7 @@ class AnnouncementGetControllerTest {
     }
 
     @Test
+    @DisplayName("모든 공지사항 조회 테스트")
     void testFoundAllAnnouncements() throws Exception {
 
         mockMvc
@@ -117,6 +119,7 @@ class AnnouncementGetControllerTest {
     }
 
     @Test
+    @DisplayName("공지사항 페이징에 대한 조회 테스트")
     void testFoundAnnouncementsByPaging() throws Exception {
 
         mockMvc
@@ -131,6 +134,7 @@ class AnnouncementGetControllerTest {
     }
 
     @Test
+    @DisplayName("공지사항 페이징에 대한 조회 테스트 - 페이지에 해당하는 데이터가 없음")
     void testNotFoundAnnouncementsByPaging() throws Exception {
 
         mockMvc
@@ -145,6 +149,7 @@ class AnnouncementGetControllerTest {
     }
 
     @Test
+    @DisplayName("공지사항 ID로 조회 테스트")
     void testFoundAnnouncementById() throws Exception {
 
         mockMvc
@@ -157,12 +162,13 @@ class AnnouncementGetControllerTest {
     }
 
     @Test
+    @DisplayName("미 등록 사용자에 대한 미 인증 점검 테스트")
     void testFoundAnnouncementByIdUnauthorized() throws Exception {
 
         mockMvc
             .perform(
                 get("/api/v1/announcement/id/"+ DataUtil.getCurrentDatetimeStringValue()) // url
-                    .with(httpBasic(userId,"notepad"))
+                    .with(httpBasic("superuser","notepad"))
             )
             .andDo(print())
             .andExpect(status().isUnauthorized());

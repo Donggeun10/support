@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +49,7 @@ class FileManagerTest {
     }
 
     @Test
+    @DisplayName("공지사항 ID 에 대한 첨부파일 추가 저장 테스트")
     void testSaveAnnouncementFile() throws Exception {
 
         final String fileName1 = "20240202_CDS.pdf"; //파일명
@@ -68,6 +70,7 @@ class FileManagerTest {
     }
 
     @Test
+    @DisplayName("공지사항 ID 에 대한 첨부파일 삭제 테스트")
     void testDeleteAnnouncementFile() {
 
         AnnouncementFile announcementFile = AnnouncementFile.builder()
@@ -75,10 +78,10 @@ class FileManagerTest {
             .build();
 
         fileManager.deleteAnnouncementFile(announcementFile);
-
     }
 
     @Test
+    @DisplayName("공지사항 ID 에 대한 첨부파일 목록 삭제 테스트")
     void testDeleteAnnouncementFiles() {
 
         List<AnnouncementFile> announcementFiles = new ArrayList<>();

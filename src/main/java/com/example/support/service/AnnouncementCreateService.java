@@ -60,7 +60,6 @@ public class AnnouncementCreateService {
 		return files == null || files.isEmpty();
 	}
 
-	@CacheEvict(cacheNames = "apps", key = "#announcementId")
 	public void appendFilesByAnnouncementId(String announcementId, List<MultipartFile> files) throws DataSaveException {
 
 		try {

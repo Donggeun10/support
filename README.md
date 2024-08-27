@@ -14,6 +14,9 @@
 - spring-boot 3.3.2
 - spring-boot-web
 - spring-boot-data-jpa
+- spring-boot-security
+- spring-boot-cache
+- ehcache
 - springdoc-openapi
 - h2database
 - lombok
@@ -39,8 +42,8 @@ docker build -t demo-api:local .  && docker run -p 9090:8080  -e"SPRING_PROFILES
 ```
 
 ## 5. 주요 문제 정의 및 해결 전략
-- 동시에 공지 사항이 변경 요청하는 문제
-  - DB 테이블 내 lock 을 통한 변경 중 타 세션의 접근을 제한 하도록 적용
+- 동시에 같은 공지 사항을 변경 하거나 읽는 요청이 다수일 때에 대한 문제
+  - DB 테이블 내 lock 을 통해 변경 중 타 세션의 접근을 제한 하도록 적용
 - 데이터 조회 요청이 많은 문제
   - virtual thread 적용을 통한 비동기 처리 
   - 최소 쓰레드 수 증가로 초기 대역폭 확보

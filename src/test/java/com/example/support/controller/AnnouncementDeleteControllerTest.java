@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.example.support.util.DataUtil;
 import java.io.FileInputStream;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -83,6 +84,7 @@ class AnnouncementDeleteControllerTest {
     }
 
     @Test
+    @DisplayName("공지사항 삭제 테스트")
     void testDeleteAnnouncementById() throws Exception {
 
         mockMvc
@@ -95,6 +97,7 @@ class AnnouncementDeleteControllerTest {
     }
 
     @Test
+    @DisplayName("공지사항 파일 삭제 테스트")
     void testDeleteAnnouncementFileById() throws Exception {
 
         mockMvc

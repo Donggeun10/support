@@ -14,6 +14,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -87,6 +88,7 @@ class AnnouncementPutControllerTest {
     }
 
     @Test
+    @DisplayName("공지사항 수정 테스트")
     void testUpdateAnnouncementById() throws Exception {
 
         final String userId = "sam";
@@ -106,6 +108,7 @@ class AnnouncementPutControllerTest {
     }
 
     @Test
+    @DisplayName("멀티 쓰레드를 통해서 동시성 문제에 대한 테스트")
     void testMultiThreadUpdateAnnouncementById() throws InterruptedException {
 
         int numberOfThreads = 10;

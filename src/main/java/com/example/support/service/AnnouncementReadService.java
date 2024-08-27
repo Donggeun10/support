@@ -48,7 +48,7 @@ public class AnnouncementReadService {
 	@Transactional
 	public AnnouncementResponse findAnnouncementById(String id) throws NotFoundAnnouncementException {
 
-		Optional<Announcement> announcementOpt = announcementRespository.findByAnnounceId(id);
+		Optional<Announcement> announcementOpt = announcementRespository.fetchByAnnounceId(id);
 
 		if(announcementOpt.isPresent()) {
 			Announcement announcement = announcementOpt.get();
