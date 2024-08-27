@@ -21,11 +21,10 @@ public class AnnouncementUpdateService {
         this.announcementRespository = announcementRespository;
     }
 
-	@CacheEvict(cacheNames = "apps", key = "#announcementId")
     @Transactional(rollbackFor = {NotFoundAnnouncementException.class, DataSaveException.class})
 	public void updateAnnouncementById(String announcementId, Announcement newAnnouncement) throws NotFoundAnnouncementException, DataSaveException {
 
-		Optional<Announcement> announcementOpt = announcementRespository.fetchByAnnounceId(announcementId);
+		Optional<Announcement> announcementOpt = announcementRespository.findByAnnounceId(announcementId);
 
 		if (announcementOpt.isPresent()) {
 			try {

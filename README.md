@@ -32,7 +32,7 @@
 - DELETE /api/v1/announcement/id/{id}
 - DELETE /api/v1/announcement/id/{id}/file-id/{fileId}
 
-## 4. Docker Image 생성 명령어
+## 4. Docker Image 생성 및 실행 명령어 
 
 ```
 docker build -t demo-api:local .  && docker run -p 9090:8080  -e"SPRING_PROFILES_ACTIVE=local"  demo-api:local
@@ -54,4 +54,4 @@ docker build -t demo-api:local .  && docker run -p 9090:8080  -e"SPRING_PROFILES
   - robot / play
   - sam / ground
 - 방법
-  - swagger-ui.html 에서 로그인 후 테스트 가능
+  - swagger-ui.html 에서 접속 후 테스트

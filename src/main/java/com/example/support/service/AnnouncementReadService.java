@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -31,6 +32,7 @@ public class AnnouncementReadService {
 		return dataManipulator.makeAnnouncementResponseList(announcementRespository.findAll());
 	}
 
+	@Cacheable(value = "apps", key = "{#page, #pageSize}")
 	public List<AnnouncementResponse> findAnnouncementsByPage(int page, int pageSize) throws BadRequestNoContentPageException {
 
 		PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "announceId"));
@@ -43,7 +45,7 @@ public class AnnouncementReadService {
 
 	}
 
-	@Cacheable(cacheNames = "apps", key = "#id")
+	@Transactional
 	public AnnouncementResponse findAnnouncementById(String id) throws NotFoundAnnouncementException {
 
 		Optional<Announcement> announcementOpt = announcementRespository.findByAnnounceId(id);

@@ -29,6 +29,7 @@ public class AnnouncementCreateService {
         this.fileManager = fileManager;
     }
 
+	@CacheEvict(value = "apps", allEntries = true)
 	@Transactional
     public void insertAnnouncement(Announcement announcement, List<MultipartFile> files) throws DataSaveException {
 		

@@ -37,7 +37,6 @@ class AnnouncementGetControllerTest {
                     .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                     .param("title", "공지사항 제목")
                     .param("content", "공지사항 내용")
-                    .param("writer", "작성자")
                     .param("beginDatetime", "2024-08-22 00:00:00")
                     .param("endDatetime", "2024-09-22 00:00:00")
                     .with(httpBasic(userId,password))
@@ -76,7 +75,6 @@ class AnnouncementGetControllerTest {
                     .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                     .param("title", "공지사항 제목2")
                     .param("content", "공지사항 내용2")
-                    .param("writer", "작성자2")
                     .param("beginDatetime", "2024-08-22 00:00:00")
                     .param("endDatetime", "2024-09-22 00:00:00")
                     .with(httpBasic(userId,password))
@@ -156,5 +154,17 @@ class AnnouncementGetControllerTest {
             )
             .andDo(print())
             .andExpect(status().isOk());
+    }
+
+    @Test
+    void testFoundAnnouncementByIdUnauthorized() throws Exception {
+
+        mockMvc
+            .perform(
+                get("/api/v1/announcement/id/"+ DataUtil.getCurrentDatetimeStringValue()) // url
+                    .with(httpBasic(userId,"notepad"))
+            )
+            .andDo(print())
+            .andExpect(status().isUnauthorized());
     }
 }

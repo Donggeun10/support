@@ -4,11 +4,15 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.support.util.DataUtil;
 import java.io.FileInputStream;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +29,17 @@ class AnnouncementPutControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private final String userId = "robot";
-    private final String password = "play";
-
     @BeforeEach
     void setup() throws Exception {
+        final String userId = "robot";
+        final String password = "play";
+
         mockMvc
             .perform(
                 post("/api/v1/announcement") // url
                     .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                     .param("title", "공지사항 제목")
                     .param("content", "공지사항 내용")
-                    .param("writer", "작성자")
                     .param("beginDatetime", "2024-08-22 00:00:00")
                     .param("endDatetime", "2024-09-22 00:00:00")
                     .with(httpBasic(userId,password))
@@ -75,7 +78,6 @@ class AnnouncementPutControllerTest {
                     .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                     .param("title", "공지사항 제목2")
                     .param("content", "공지사항 내용2")
-                    .param("writer", "작성자2")
                     .param("beginDatetime", "2024-08-22 00:00:00")
                     .param("endDatetime", "2024-09-22 00:00:00")
                     .with(httpBasic(userId,password))
@@ -87,18 +89,68 @@ class AnnouncementPutControllerTest {
     @Test
     void testUpdateAnnouncementById() throws Exception {
 
+        final String userId = "sam";
+        final String password = "ground";
+
         mockMvc
             .perform(
                 put("/api/v1/announcement/id/"+ DataUtil.getCurrentDatetimeStringValue()) // url
                     .param("title", "공지사항 제목3")
                     .param("content", "공지사항 내용3")
-                    .param("writer", "작성자3")
                     .param("beginDatetime", "2024-08-22 00:00:00")
                     .param("endDatetime", "2024-09-02 00:00:00")
-                    .with(httpBasic(userId,password))
+                    .with(httpBasic(userId, password))
             )
             .andDo(print())
             .andExpect(status().isAccepted());
+    }
+
+    @Test
+    void testMultiThreadUpdateAnnouncementById() throws InterruptedException {
+
+        int numberOfThreads = 10;
+        CountDownLatch latch = new CountDownLatch(numberOfThreads);
+
+        try(ExecutorService service = Executors.newVirtualThreadPerTaskExecutor()) {
+
+            for (int i = 0; i < numberOfThreads; i++) {
+                service.submit(()->{
+
+                    final String userId = "sam";
+                    final String password = "ground";
+
+                    try {
+                        String announceId = DataUtil.getCurrentDatetimeStringValue();
+
+                        mockMvc
+                            .perform(
+                                put("/api/v1/announcement/id/"+ announceId) // url
+                                    .param("title", "공지사항 제목 "+Thread.currentThread().threadId())
+                                    .param("content", "공지사항 내용 "+System.currentTimeMillis())
+                                    .param("beginDatetime", "2024-08-22 00:00:00")
+                                    .param("endDatetime", "2024-09-02 00:00:00")
+                                    .with(httpBasic(userId, password))
+                            )
+                            .andDo(print())
+                            .andExpect(status().isAccepted());
+
+                        mockMvc
+                            .perform(
+                                get("/api/v1/announcement/id/"+ announceId) // url
+                                    .with(httpBasic(userId, password))
+                            )
+                            .andDo(print())
+                            .andExpect(status().isOk());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    latch.countDown();
+                });
+            }
+            latch.await();
+        }
+
     }
 
 }

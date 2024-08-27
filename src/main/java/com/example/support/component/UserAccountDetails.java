@@ -34,7 +34,7 @@ public class UserAccountDetails implements UserDetailsService {
 
         Member member = memberOpt.get();
         if(log.isDebugEnabled()) {
-            log.info("Success find member {}", member);
+            log.debug("Success find member {}", member);
         }
 
         return User.builder()

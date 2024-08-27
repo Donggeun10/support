@@ -23,7 +23,7 @@ public class CacheConfig {
     public CacheConfig() {
 
         CacheEventListenerConfigurationBuilder cacheEventListenerConfiguration = CacheEventListenerConfigurationBuilder
-            .newEventListenerConfiguration(new CacheEventLogger(), EventType.CREATED, EventType.UPDATED)
+            .newEventListenerConfiguration(new CacheEventLogger(), EventType.CREATED, EventType.UPDATED, EventType.EVICTED, EventType.EXPIRED)
             .unordered().asynchronous();
 
         this.jCacheConfiguration = Eh107Configuration.fromEhcacheCacheConfiguration(

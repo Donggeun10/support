@@ -27,7 +27,6 @@ public class AnnouncementDeleteService {
         this.fileManager = fileManager;
     }
 
-	@CacheEvict(cacheNames = "apps", key = "#id")
 	@Transactional
 	public void deleteAnnouncementById(String id) throws NotFoundAnnouncementException {
 
@@ -42,7 +41,6 @@ public class AnnouncementDeleteService {
 		}
 	}
 
-	@CacheEvict(cacheNames = "apps", key = "#id")
 	public void deleteAnnouncementByIdAndFileId(String id, int fileId) throws NotFoundAnnouncementException {
 
 		Optional<Announcement> data = announcementRespository.findByAnnounceId(id);
