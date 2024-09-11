@@ -39,6 +39,8 @@
 
 ```
 docker build -t demo-api:local .  && docker run -p 9090:8080  -e"SPRING_PROFILES_ACTIVE=local"  demo-api:local
+docker build -t demo-api:local -f Dockerfile_git . && docker run -p 9090:8080  -e"SPRING_PROFILES_ACTIVE=local"  demo-api:local
+docker build -t demo-api:local -f Dockerfile_aot . && docker run -p 9090:8080  -e"SPRING_PROFILES_ACTIVE=local"  demo-api:local
 ```
 
 ## 5. 주요 문제 정의 및 해결 전략
@@ -51,6 +53,8 @@ docker build -t demo-api:local .  && docker run -p 9090:8080  -e"SPRING_PROFILES
 - 보안 문제
   - spring security를 통한 범용적 보안 설정 적용
   - basic authentication 을 통해서 인증된 사용자만 API에 접근 가능 하도록 적용
+- 인스턴스 시작 시간 및 라이브러리 로딩 문제
+  - AOT 컴파일을 통한 이미지 생성을 통해 인스턴스 시작 시간을 최소화
 
 ## 6. 테스트 계정 및 방법
 - 테스트 계정

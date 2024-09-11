@@ -7,6 +7,7 @@ import com.example.support.util.DataUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequiredArgsConstructor
 @Slf4j
 @RestController
 @RequestMapping("/api/v1")
@@ -23,11 +25,7 @@ public class AnnouncementGetController {
 
 	private final AnnouncementReadService announcementReadService;
 
-    public AnnouncementGetController(AnnouncementReadService announcementReadService) {
-        this.announcementReadService = announcementReadService;
-    }
-
-	@Operation(summary = "모든 공지 사항 목록 조회", responses = {
+    @Operation(summary = "모든 공지 사항 목록 조회", responses = {
 		@ApiResponse( responseCode = "200", description = "조회된 공지 사항 정보를 반환함."),
 		@ApiResponse( responseCode = "401", description = "사용자 정보가 없음")
 	}, security = @SecurityRequirement(name = "basicAuth"))

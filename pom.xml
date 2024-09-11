@@ -28,6 +28,7 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+        <tomcat.version>10.1.28</tomcat.version>
     </properties>
     <dependencies>
         <dependency>
@@ -84,6 +85,33 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>native</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.apache.tomcat.embed</groupId>
+                            <artifactId>tomcat-embed-core</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.tomcat.embed</groupId>
+                            <artifactId>tomcat-embed-websocket</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.tomcat.experimental</groupId>
+                    <artifactId>tomcat-embed-programmatic</artifactId>
+                    <version>${tomcat.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -102,6 +130,25 @@
             <plugin>
                 <groupId>org.cyclonedx</groupId>
                 <artifactId>cyclonedx-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.example.support.BootApplication</mainClass>
+                    <buildArgs>
+                        <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                        <buildArg>-H:+RunReachabilityHandlersConcurrently</buildArg>
+                        <!--<buildArg>&#45;&#45;trace-class-initialization=ch.qos.logback.core.util.StatusPrinter2</buildArg>-->
+                        <!--<buildArg>&#45;&#45;initialize-at-build-time=com.thoughtworks.xstream.mapper.EnumMapper</buildArg>-->
+                        <!--<buildArg>&#45;&#45;initialize-at-run-time=com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider</buildArg>-->
+                        <!--<buildArg>-H:DynamicProxyConfigurationFiles=proxy-config.json</buildArg>
+                        <buildArg>-H:SerializationConfigurationFiles=serialization-config.json</buildArg>
+                        <buildArg>-H:ReflectionConfigurationFiles=reflect-config.json</buildArg>
+                        <buildArg>-H:ResourceConfigurationFiles=resource-config.json</buildArg>-->
+                        <buildArg>--static --libc=musl</buildArg>
+                    </buildArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -1,0 +1,84 @@
+# build stage
+FROM ghcr.io/graalvm/graalvm-community:21-ol9 AS builder
+
+# oracle linux 계정 세팅
+RUN groupadd appgroup && useradd appuser
+RUN usermod -aG appgroup appuser
+
+ARG DOCKER_BUILD_RES=src/test/resources/Dockerfile
+ARG USER_HOME=/home/appuser
+
+WORKDIR $USER_HOME
+COPY $DOCKER_BUILD_RES/wget-1.21.1-7.el9.x86_64.rpm $USER_HOME
+RUN rpm -ivh wget-1.21.1-7.el9.x86_64.rpm
+
+USER appuser
+
+# musl 설치
+WORKDIR $USER_HOME
+ARG MUSL_VERSION=10.2.1
+RUN wget http://more.musl.cc/$MUSL_VERSION/x86_64-linux-musl/x86_64-linux-musl-native.tgz
+RUN tar xvfz x86_64-linux-musl-native.tgz
+ENV MUSL_HOME=$USER_HOME/x86_64-linux-musl-native
+
+# zlib 설치
+WORKDIR $USER_HOME
+ARG ZLIB_VERSION=1.3.1
+RUN wget http://www.zlib.net/zlib-$ZLIB_VERSION.tar.gz
+RUN tar -xvf zlib-$ZLIB_VERSION.tar.gz
+WORKDIR $USER_HOME/zlib-$ZLIB_VERSION
+RUN ./configure --prefix=$MUSL_HOME --static
+RUN make && make install
+
+# upx 설치
+WORKDIR $USER_HOME
+ARG UPX_VERSION=4.2.4
+COPY $DOCKER_BUILD_RES/upx-$UPX_VERSION-amd64_linux.tar $USER_HOME
+RUN tar -xvf upx-$UPX_VERSION-amd64_linux.tar
+ENV UPX_HOME=$USER_HOME/upx-$UPX_VERSION-amd64_linux
+
+# maven 설치
+WORKDIR $USER_HOME
+ARG MAVEN_VERSION=3.9.9
+RUN wget http://dlcdn.apache.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
+RUN tar -xvf apache-maven-$MAVEN_VERSION-bin.tar.gz
+ENV MAVEN_HOME $USER_HOME/apache-maven-$MAVEN_VERSION
+ENV MAVEN_CONFIG $USER_HOME/.m2
+
+# SET PATH
+ENV PATH=$PATH:$MUSL_HOME/bin:$MAVEN_HOME/bin:$UPX_HOME
+
+# dependency caching
+WORKDIR /home/appuser
+COPY pom.xml .
+RUN mvn -B dependency:resolve
+# source 복사 & package
+#COPY src/test/resources/proxy-config.json proxy-config.json
+#COPY src/test/resources/serialization-config.json serialization-config.json
+#COPY src/test/resources/reflect-config.json reflect-config.json
+#COPY src/test/resources/resource-config.json resource-config.json
+COPY src/main/ src/main/
+
+RUN mvn -Pnative native:compile
+RUN upx -7 target/boot
+
+FROM alpine:3.20
+
+# runtime package 설치
+#RUN sed 's/https/http/g' -i /etc/apk/repositories
+#RUN apk update
+
+# 1) alpine 계정 세팅
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+# 2) Native 실행 파일 복사
+COPY --from=builder /home/appuser/target/boot /home/appuser
+
+# 3) 변수 설정
+ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-stg}
+EXPOSE 8080
+
+# 4) 실행
+WORKDIR /home/appuser
+ENTRYPOINT ["./boot", "-Xms2g", "-Xmx2g", "-Djdk.virtualThreadScheduler.parallelism=10"]

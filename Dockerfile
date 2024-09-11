@@ -1,5 +1,5 @@
 ## build stage
-FROM maven:3.9.5-eclipse-temurin-21-alpine AS builder
+FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
 
 WORKDIR /build
 COPY pom.xml .
@@ -9,7 +9,7 @@ RUN mvn -B dependency:resolve
 # 2) source 복사 & package
 COPY src/ /build/src/
 RUN mvn package -DskipTests
-RUN java -Djarmode=layertools -jar target/boot.jar extract
+RUN java -Djarmode=tools -jar target/boot.jar extract --destination application
 
 FROM eclipse-temurin:21-jre-alpine
 
@@ -19,9 +19,8 @@ USER appuser
 WORKDIR /home/appuser
 
 # 2) Jar 복사
-COPY --from=builder /build/dependencies/ ./
-COPY --from=builder /build/spring-boot-loader/ ./
-COPY --from=builder /build/application/ ./
+COPY --chown=appuser --from=builder /build/application/lib ./lib
+COPY --chown=appuser --from=builder /build/application/boot.jar ./boot.jar
 
 # 3) 실행
-ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
+ENTRYPOINT ["java", "-jar", "boot.jar"]

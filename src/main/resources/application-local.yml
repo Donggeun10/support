@@ -8,7 +8,8 @@ server:
     shutdown: graceful
     tomcat:
         threads:
-            min-spare: 20
+            min-spare: 10
+            max: 200
 
 spring:
     application:
@@ -19,7 +20,7 @@ spring:
         username: sa
         password: sa
         hikari:
-          pool-name: homework-pool
+            pool-name: homework-pool
     jpa:
         show-sql: true
         hibernate:

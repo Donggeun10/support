@@ -1,7 +1,5 @@
 package com.example.support.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,26 +26,22 @@ import org.hibernate.annotations.CreationTimestamp;
 @ToString
 public class AnnouncementFile implements Serializable { // 제목, 내용, 작성자, 공지 시작일시, 공지 종료일시, 첨부파일(여러개), 등록잀시, 조회수
 
+	@Getter
 	@Id
-	@JsonProperty
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "file_id")
-	@Getter
 	private int fileId;
 
-	@JsonProperty
+	@Getter
 	@Column(name = "name", length = 200)
 	private String name;
 
 	@Getter
-	@JsonProperty
 	@Column(name = "path", length = 200)
 	private String path;
 
-	@JsonProperty
 	@CreationTimestamp
 	@Column(name = "inserted_datetime")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	@Schema(type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp insertedDatetime;
 
@@ -55,7 +49,5 @@ public class AnnouncementFile implements Serializable { // 제목, 내용, 작�
 	@JoinColumn(name = "announce_id")
 	private Announcement announcement;
 
-
 }
-	
 

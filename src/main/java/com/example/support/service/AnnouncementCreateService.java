@@ -9,12 +9,14 @@ import com.example.support.repository.AnnouncementFileRespository;
 import com.example.support.repository.AnnouncementRespository;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class AnnouncementCreateService {
@@ -23,19 +25,11 @@ public class AnnouncementCreateService {
 	private final AnnouncementFileRespository announcementFileRespository;
 	private final FileManager fileManager;
 
-    public AnnouncementCreateService(AnnouncementRespository announcementRespository, AnnouncementFileRespository announcementFileRespository, FileManager fileManager) {
-        this.announcementRespository = announcementRespository;
-        this.announcementFileRespository = announcementFileRespository;
-        this.fileManager = fileManager;
-    }
-
-	@CacheEvict(value = "apps", allEntries = true)
+    @CacheEvict(value = "apps", allEntries = true)
 	@Transactional
     public void insertAnnouncement(Announcement announcement, List<MultipartFile> files) throws DataSaveException {
 		
 		try {
-			announcementRespository.save(announcement);
-
 			if(isNoAttachedFiles(files)) {
 				return;
 			}
@@ -49,7 +43,9 @@ public class AnnouncementCreateService {
 						.build();
 				announcementFiles.add(announcementFile);
 			}
-			announcementFileRespository.saveAll(announcementFiles);
+			announcement.setFiles(announcementFiles);
+
+			announcementRespository.save(announcement);
 
 		} catch(Exception e) {
 			throw new DataSaveException(e.getMessage());

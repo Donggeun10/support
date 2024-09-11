@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.sql.Timestamp;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@RequiredArgsConstructor
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/announcement")
@@ -31,11 +33,7 @@ public class AnnouncementPostController {
 
 	private final AnnouncementCreateService announcementCreateService;
 
-    public AnnouncementPostController(AnnouncementCreateService announcementCreateService) {
-        this.announcementCreateService = announcementCreateService;
-    }
-
-	@Operation(summary = "공지 사항 신규 등록", responses = {
+    @Operation(summary = "공지 사항 신규 등록", responses = {
 		@ApiResponse( responseCode = "201", description = "등록 성공" ),
 		@ApiResponse( responseCode = "401", description = "사용자 정보가 없음"),
 		@ApiResponse( responseCode = "500", description = "등록 중 오류 발생함" )

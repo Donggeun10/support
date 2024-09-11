@@ -6,19 +6,17 @@ import com.example.support.exception.DataSaveException;
 import com.example.support.exception.NotFoundAnnouncementException;
 import com.example.support.repository.AnnouncementRespository;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class AnnouncementUpdateService {
 
 	private final AnnouncementRespository announcementRespository;
-
-    public AnnouncementUpdateService(AnnouncementRespository announcementRespository) {
-        this.announcementRespository = announcementRespository;
-    }
 
     @Transactional(rollbackFor = {NotFoundAnnouncementException.class, DataSaveException.class})
 	public void updateAnnouncementById(String announcementId, Announcement newAnnouncement) throws NotFoundAnnouncementException, DataSaveException {

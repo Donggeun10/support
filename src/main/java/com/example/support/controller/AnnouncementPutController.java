@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.sql.Timestamp;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +21,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequiredArgsConstructor
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/announcement")
 public class AnnouncementPutController {
 
 	private final AnnouncementUpdateService announcementUpdateService;
-
-	public AnnouncementPutController(AnnouncementUpdateService announcementUpdateService) {
-		this.announcementUpdateService = announcementUpdateService;
-	}
 
 	@Operation(summary = "공지 사항 ID로 변경", responses = {
 		@ApiResponse( responseCode = "202", description = "요청 공지 사항 ID에 해당하는 공지 사항 정보 변경 성공" ),

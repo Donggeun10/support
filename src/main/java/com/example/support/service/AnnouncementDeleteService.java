@@ -8,10 +8,12 @@ import com.example.support.repository.AnnouncementFileRespository;
 import com.example.support.repository.AnnouncementRespository;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class AnnouncementDeleteService {
@@ -20,19 +22,12 @@ public class AnnouncementDeleteService {
 	private final AnnouncementFileRespository announcementFileRespository;
 	private final FileManager fileManager;
 
-    public AnnouncementDeleteService(AnnouncementRespository announcementRespository, AnnouncementFileRespository announcementFileRespository, FileManager fileManager) {
-        this.announcementRespository = announcementRespository;
-        this.announcementFileRespository = announcementFileRespository;
-        this.fileManager = fileManager;
-    }
-
 	@Transactional
 	public void deleteAnnouncementById(String id) throws NotFoundAnnouncementException {
 
-		Optional<Announcement> data = announcementRespository.findByAnnounceId(id);
+		Optional<Announcement> data = announcementRespository.fetchByAnnounceId(id);
 		if(data.isPresent()){
 			List<AnnouncementFile> files = announcementFileRespository.findByAnnouncement_AnnounceId(id);
-			announcementFileRespository.deleteAll(files);
 			announcementRespository.delete(data.get());
 			fileManager.deleteAnnouncementFiles(id, files);
 		}else{
