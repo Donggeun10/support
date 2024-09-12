@@ -19,7 +19,7 @@ public class AnnouncementUpdateService {
 	private final AnnouncementRespository announcementRespository;
 
     @Transactional(rollbackFor = {NotFoundAnnouncementException.class, DataSaveException.class})
-	public void updateAnnouncementById(String announcementId, Announcement newAnnouncement) throws NotFoundAnnouncementException, DataSaveException {
+	public void updateAnnouncementById(String announcementId, Announcement newAnnouncement) {
 
 		Optional<Announcement> announcementOpt = announcementRespository.fetchByAnnounceId(announcementId);
 

@@ -1,9 +1,7 @@
 package com.example.support.controller;
 
 import com.example.support.domain.SuccessResponse;
-import com.example.support.exception.NotFoundAnnouncementException;
 import com.example.support.service.AnnouncementDeleteService;
-import com.example.support.util.DataUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -30,11 +28,11 @@ public class AnnouncementDeleteController {
 		@ApiResponse( responseCode = "404", description = "공지 사항 정보가 없음" )
 	}, security = @SecurityRequirement(name = "basicAuth"))
 	@DeleteMapping(value="/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> deleteAnnouncementById(@PathVariable String id) throws NotFoundAnnouncementException {
+	public ResponseEntity<SuccessResponse> deleteAnnouncementById(@PathVariable String id) {
 
 		announcementDeleteService.deleteAnnouncementById(id);
 
-		return ResponseEntity.accepted().body(DataUtil.objectToString(new SuccessResponse(String.format("공지 사항(%s)이 삭제 되었습니다.", id))));
+		return ResponseEntity.accepted().body(new SuccessResponse(String.format("공지 사항(%s)이 삭제 되었습니다.", id)));
 	}
 
 	@Operation(summary = "공지 사항 ID와 파일ID 로 파일 삭제", responses = {
@@ -43,10 +41,10 @@ public class AnnouncementDeleteController {
 		@ApiResponse( responseCode = "404", description = "공지 사항 정보 혹은 파일 정보가 없음" )
 	}, security = @SecurityRequirement(name = "basicAuth"))
 	@DeleteMapping(value="/id/{id}/file-id/{fileId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> deleteAnnouncementFileById(@PathVariable String id, @PathVariable int fileId) throws NotFoundAnnouncementException {
+	public ResponseEntity<SuccessResponse> deleteAnnouncementFileById(@PathVariable String id, @PathVariable int fileId) {
 
 		announcementDeleteService.deleteAnnouncementByIdAndFileId(id, fileId);
 
-		return ResponseEntity.accepted().body(DataUtil.objectToString(new SuccessResponse(String.format("공지 사항(%s)이 파일(%s)이 삭제 되었습니다.", id, fileId))));
+		return ResponseEntity.accepted().body(new SuccessResponse(String.format("공지 사항(%s)이 파일(%s)이 삭제 되었습니다.", id, fileId)));
 	}
 }

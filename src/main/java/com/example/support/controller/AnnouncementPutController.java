@@ -5,7 +5,6 @@ import com.example.support.entity.Announcement;
 import com.example.support.exception.DataSaveException;
 import com.example.support.exception.NotFoundAnnouncementException;
 import com.example.support.service.AnnouncementUpdateService;
-import com.example.support.util.DataUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -36,7 +35,7 @@ public class AnnouncementPutController {
 		@ApiResponse( responseCode = "500", description = "데이터 변경 중 오류 발생함" )
 	}, security = @SecurityRequirement(name = "basicAuth"))
     @PutMapping(value="/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> putAnnouncementById(@PathVariable String id, @RequestParam String title, @RequestParam String content,
+	public ResponseEntity<SuccessResponse> putAnnouncementById(@PathVariable String id, @RequestParam String title, @RequestParam String content,
 													  @RequestParam(defaultValue = "2024-08-22 00:00:00") String beginDatetime,
 													  @RequestParam(defaultValue = "2024-09-22 00:00:00") String endDatetime,
 													  Authentication authentication) throws NotFoundAnnouncementException, DataSaveException {
@@ -51,7 +50,7 @@ public class AnnouncementPutController {
 
 		announcementUpdateService.updateAnnouncementById(id, announcement);
 
-		return ResponseEntity.accepted().body(DataUtil.objectToString(new SuccessResponse(String.format("공지사항(%s)이 변경되었습니다.", id))));
+		return ResponseEntity.accepted().body(new SuccessResponse(String.format("공지사항(%s)이 변경되었습니다.", id)));
 	}
 
 }

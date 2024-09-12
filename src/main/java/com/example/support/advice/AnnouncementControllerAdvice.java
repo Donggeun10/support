@@ -9,43 +9,35 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
 public class AnnouncementControllerAdvice {
-	
-	@ExceptionHandler(DataSaveException.class)
-	public ResponseEntity<String> serverException(DataSaveException dataSaveException) {
 
-		ErrorResponse errorRes = new ErrorResponse("데이터 저장 중 오류가 발생했습니다.");
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(DataSaveException.class)
+	public ErrorResponse serverException(DataSaveException dataSaveException) {
 
 		log.error(DataUtil.makeErrorLogMessage(dataSaveException));
-
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(DataUtil.objectToString(errorRes));
-
+		return new ErrorResponse("데이터 저장 중 오류가 발생했습니다.");
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(BadRequestNoContentPageException.class)
-	public ResponseEntity<String> serverException(BadRequestNoContentPageException badRequestNoContentPageException) {
-
-		ErrorResponse errorRes = new ErrorResponse(badRequestNoContentPageException.getMessage());
+	public ErrorResponse serverException(BadRequestNoContentPageException badRequestNoContentPageException) {
 
 		log.error(DataUtil.makeErrorLogMessage(badRequestNoContentPageException));
-
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(DataUtil.objectToString(errorRes));
-
+		return new ErrorResponse(badRequestNoContentPageException.getMessage());
 	}
 
 	@ExceptionHandler(NotFoundAnnouncementException.class)
-	public ResponseEntity<String> notFoundAnnouncement(NotFoundAnnouncementException e) {
+	public ResponseEntity<ErrorResponse> notFoundAnnouncement(NotFoundAnnouncementException e) {
 
 		ErrorResponse errorRes = new ErrorResponse(e.getMessage());
-
 		log.error(DataUtil.makeErrorLogMessage(e));
 
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(DataUtil.objectToString(errorRes));
-
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorRes);
 	}
-
 }

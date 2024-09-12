@@ -23,7 +23,7 @@ public class AnnouncementDeleteService {
 	private final FileManager fileManager;
 
 	@Transactional
-	public void deleteAnnouncementById(String id) throws NotFoundAnnouncementException {
+	public void deleteAnnouncementById(String id) {
 
 		Optional<Announcement> data = announcementRespository.fetchByAnnounceId(id);
 		if(data.isPresent()){
@@ -35,7 +35,7 @@ public class AnnouncementDeleteService {
 		}
 	}
 
-	public void deleteAnnouncementByIdAndFileId(String id, int fileId) throws NotFoundAnnouncementException {
+	public void deleteAnnouncementByIdAndFileId(String id, int fileId) {
 
 		Optional<Announcement> data = announcementRespository.findByAnnounceId(id);
 		if(data.isPresent()){

@@ -27,7 +27,7 @@ public class AnnouncementCreateService {
 
     @CacheEvict(value = "apps", allEntries = true)
 	@Transactional
-    public void insertAnnouncement(Announcement announcement, List<MultipartFile> files) throws DataSaveException {
+    public void insertAnnouncement(Announcement announcement, List<MultipartFile> files) {
 		
 		try {
 			if(isNoAttachedFiles(files)) {
@@ -56,7 +56,7 @@ public class AnnouncementCreateService {
 		return files == null || files.isEmpty();
 	}
 
-	public void appendFilesByAnnouncementId(String announcementId, List<MultipartFile> files) throws DataSaveException {
+	public void appendFilesByAnnouncementId(String announcementId, List<MultipartFile> files) {
 
 		try {
 

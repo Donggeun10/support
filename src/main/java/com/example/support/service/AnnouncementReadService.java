@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +31,7 @@ public class AnnouncementReadService {
 	}
 
 	@Cacheable(value = "apps", key = "{#page, #pageSize}")
-	public List<AnnouncementResponse> findAnnouncementsByPage(int page, int pageSize) throws BadRequestNoContentPageException {
+	public List<AnnouncementResponse> findAnnouncementsByPage(int page, int pageSize) {
 
 		PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "announceId"));
 		Page<Announcement> announcementList = announcementRespository.findAll(pageRequest);
@@ -42,8 +43,9 @@ public class AnnouncementReadService {
 
 	}
 
+	@CacheEvict(value = "apps", allEntries = true)
 	@Transactional
-	public AnnouncementResponse findAnnouncementById(String id) throws NotFoundAnnouncementException {
+	public AnnouncementResponse findAnnouncementById(String id) {
 
 		Optional<Announcement> announcementOpt = announcementRespository.fetchByAnnounceId(id);
 

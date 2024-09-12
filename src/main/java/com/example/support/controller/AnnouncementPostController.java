@@ -3,7 +3,6 @@ package com.example.support.controller;
 import com.example.support.domain.SuccessResponse;
 import com.example.support.entity.Announcement;
 import com.example.support.exception.DataSaveException;
-import com.example.support.exception.NotFoundAnnouncementException;
 import com.example.support.service.AnnouncementCreateService;
 import com.example.support.util.DataUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,10 +64,10 @@ public class AnnouncementPostController {
 		@ApiResponse( responseCode = "404", description = "존재하지 않은 공지사항ID를 요청함" )
 	}, security = @SecurityRequirement(name = "basicAuth"))
 	@PostMapping(value="/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<String> putAnnouncementById(@PathVariable String id, @RequestPart(value="attached") List<MultipartFile> files) throws NotFoundAnnouncementException, DataSaveException {
+	public ResponseEntity<SuccessResponse> putAnnouncementById(@PathVariable String id, @RequestPart(value="attached") List<MultipartFile> files) {
 
 		announcementCreateService.appendFilesByAnnouncementId(id, files);
 
-		return ResponseEntity.accepted().body(DataUtil.objectToString(new SuccessResponse(String.format("공지사항(%s)이 파일이 추가 되었습니다.", id))));
+		return ResponseEntity.accepted().body(new SuccessResponse(String.format("공지사항(%s)이 파일이 추가 되었습니다.", id)));
 	}
 }
