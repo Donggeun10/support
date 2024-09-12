@@ -6,6 +6,7 @@ import com.example.support.exception.DataSaveException;
 import com.example.support.exception.NotFoundAnnouncementException;
 import com.example.support.util.DataUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -39,5 +40,14 @@ public class AnnouncementControllerAdvice {
 		log.error(DataUtil.makeErrorLogMessage(e));
 
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorRes);
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<ErrorResponse> dataIntegrityViolation(DataIntegrityViolationException e) {
+
+		ErrorResponse errorRes = new ErrorResponse(e.getMessage());
+		log.error(DataUtil.makeErrorLogMessage(e));
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorRes);
 	}
 }

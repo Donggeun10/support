@@ -2,8 +2,6 @@ package com.example.support.controller;
 
 import com.example.support.domain.SuccessResponse;
 import com.example.support.entity.Announcement;
-import com.example.support.exception.DataSaveException;
-import com.example.support.exception.NotFoundAnnouncementException;
 import com.example.support.service.AnnouncementUpdateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -38,7 +36,7 @@ public class AnnouncementPutController {
 	public ResponseEntity<SuccessResponse> putAnnouncementById(@PathVariable String id, @RequestParam String title, @RequestParam String content,
 													  @RequestParam(defaultValue = "2024-08-22 00:00:00") String beginDatetime,
 													  @RequestParam(defaultValue = "2024-09-22 00:00:00") String endDatetime,
-													  Authentication authentication) throws NotFoundAnnouncementException, DataSaveException {
+													  Authentication authentication) {
 
 		Announcement announcement = Announcement.builder()
 			.title(title)

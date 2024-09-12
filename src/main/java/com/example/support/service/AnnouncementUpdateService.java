@@ -2,7 +2,6 @@ package com.example.support.service;
 
 
 import com.example.support.entity.Announcement;
-import com.example.support.exception.DataSaveException;
 import com.example.support.exception.NotFoundAnnouncementException;
 import com.example.support.repository.AnnouncementRespository;
 import java.util.Optional;
@@ -18,23 +17,17 @@ public class AnnouncementUpdateService {
 
 	private final AnnouncementRespository announcementRespository;
 
-    @Transactional(rollbackFor = {NotFoundAnnouncementException.class, DataSaveException.class})
+    @Transactional
 	public void updateAnnouncementById(String announcementId, Announcement newAnnouncement) {
 
 		Optional<Announcement> announcementOpt = announcementRespository.fetchByAnnounceId(announcementId);
 
 		if (announcementOpt.isPresent()) {
-			try {
-				Announcement oldAnnouncement = announcementOpt.get();
-				oldAnnouncement.update(newAnnouncement);
-				announcementRespository.save(oldAnnouncement);
-			} catch (Exception e) {
-				throw new DataSaveException(e.getMessage());
-			}
+			Announcement oldAnnouncement = announcementOpt.get();
+			oldAnnouncement.update(newAnnouncement);
+			announcementRespository.save(oldAnnouncement);
 		} else {
 			throw new NotFoundAnnouncementException(String.format("요청한 ID(%s)의 공지 사항 정보가 없습니다.", announcementId));
 		}
-
 	}
-
 }

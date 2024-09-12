@@ -1,7 +1,5 @@
 package com.example.support.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
@@ -13,18 +11,6 @@ public class DataUtil {
 		throw new IllegalStateException("Utility class");
 	}
 
-	public static String objectToString(Object obj) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(obj);
-		} catch (JsonProcessingException e) {
-			StackTraceElement[] stackTrace =  e.getStackTrace();
-			log.error("{}:{}", e.getMessage(), stackTrace[0]);
-		}
-		
-		return "";
-	}
-	
 	public static String makeErrorLogMessage(Exception e) {
 		StackTraceElement[] stackTrace =  e.getStackTrace();
 		return String.format("%s:%s", e.getMessage(), stackTrace[0]);
@@ -39,7 +25,5 @@ public class DataUtil {
 
 		// Format the current date and time
 		return now.format(formatter);
-
 	}
-	
 }

@@ -2,7 +2,6 @@ package com.example.support.controller;
 
 import com.example.support.domain.SuccessResponse;
 import com.example.support.entity.Announcement;
-import com.example.support.exception.DataSaveException;
 import com.example.support.service.AnnouncementCreateService;
 import com.example.support.util.DataUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +41,7 @@ public class AnnouncementPostController {
 												   @RequestParam(defaultValue = "2024-08-22 00:00:00") String beginDatetime,
 												   @RequestParam(defaultValue = "2024-09-22 00:00:00") String endDatetime,
 												   @RequestPart(value="attached", required=false) List<MultipartFile> files,
-												   Authentication authentication) throws DataSaveException {
+												   Authentication authentication) {
 
 		Announcement announcement = Announcement.builder()
 				.announceId(DataUtil.getCurrentDatetimeStringValue())
