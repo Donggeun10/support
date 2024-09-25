@@ -1,13 +1,5 @@
 package com.example.support.domain;
 
-import lombok.Getter;
+public record ErrorResponse (String errorMessage) {
 
-@Getter
-public class ErrorResponse {
-
-	private String errorMessage = "";
-	
-	public ErrorResponse(String errorMsg) {
-		errorMessage = errorMsg;
-	}
 }

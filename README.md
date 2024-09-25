@@ -48,7 +48,7 @@ docker build -t demo-api:local -f Dockerfile_aot . && docker run -p 9090:8080  -
   - DB 테이블 내 lock 을 통해 변경 중 타 세션의 접근을 제한 하도록 적용
 - 데이터 조회 요청이 많은 문제
   - virtual thread 적용을 통한 비동기 처리 
-  - 최소 쓰레드 수 증가로 초기 대역폭 확보
+  - jdk.virtualThreadScheduler.parallelism 를 통한 병렬 처리
   - 캐시를 통해서 반복적으로 같은 데이터에 대한 요청에 대한 DB 조회를 최소화 함
 - 보안 문제
   - spring security를 통한 범용적 보안 설정 적용
