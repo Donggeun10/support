@@ -1,0 +1,19 @@
+services:
+    webapp:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        ports:
+            - "9090:8080"
+        #command: "--port 9083"
+        environment:
+            - SPRING_PROFILES_ACTIVE=local
+    webapp-aot:
+        build:
+            context: ./
+            dockerfile: Dockerfile_aot
+        ports:
+            - "9091:8080"
+        #command: "--port 9083"
+        environment:
+            - SPRING_PROFILES_ACTIVE=local
