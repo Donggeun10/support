@@ -1,5 +1,7 @@
+name: support-rest
 services:
     webapp:
+        image: demo-api:local
         build:
             context: ./
             dockerfile: Dockerfile
@@ -9,6 +11,7 @@ services:
         environment:
             - SPRING_PROFILES_ACTIVE=local
     webapp-aot:
+        image: demo-aot-api:local
         build:
             context: ./
             dockerfile: Dockerfile_aot
