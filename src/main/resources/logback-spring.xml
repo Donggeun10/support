@@ -14,7 +14,7 @@
             <fileNamePattern>logs/app.log.%d{yyyy-MM}_%i</fileNamePattern>
             <!-- each file should be at most 30MB, keep 90 days worth of history -->
             <maxHistory>90</maxHistory>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFileNamingAndTriggeringPolicy">
                 <maxFileSize>30MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>

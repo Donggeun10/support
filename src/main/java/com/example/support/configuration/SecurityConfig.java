@@ -41,6 +41,7 @@ public class SecurityConfig {
                 config -> config.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/api-docs", "/swagger-ui.html","/actuator/**").permitAll()
                     .requestMatchers("/api/v1/announcement/**").authenticated()
                     .requestMatchers("/api/v1/announcements/**").authenticated()
+                    .requestMatchers("/").authenticated()
                     .anyRequest().denyAll()
             )
             .httpBasic(

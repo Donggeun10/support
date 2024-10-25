@@ -42,7 +42,7 @@ public class AnnouncementGetController {
 	@GetMapping(value = "/announcement/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AnnouncementResponse> getAnnouncementById(@PathVariable String id) {
 
-		return ResponseEntity.ok(announcementReadService.findAnnouncementById(id));
+		return ResponseEntity.ok(announcementReadService.findAnnouncementByIdAndIncreaseViewCount(id));
 	}
 
 	@Operation(summary = "페이지별 공지 사항 목록 조회", responses = {

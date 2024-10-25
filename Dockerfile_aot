@@ -76,7 +76,7 @@ USER appuser
 COPY --from=builder /home/appuser/target/boot /home/appuser
 
 # 3) 변수 설정
-ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-stg}
+ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
 EXPOSE 8080
 
 # 4) 실행

@@ -1,0 +1,37 @@
+## build stage
+FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
+
+WORKDIR /build
+COPY pom.xml .
+# 1) dependency caching
+RUN mvn -B dependency:resolve
+
+# 2) source 복사 & package
+COPY src/ /build/src/
+RUN mvn package -DskipTests
+RUN java -Djarmode=tools -jar target/boot.jar extract --destination application
+
+## jre 21 - alpine 이미지
+FROM bellsoft/liberica-openjre-alpine:21-cds
+
+#RUN sed 's/https/http/g' -i /etc/apk/repositories
+#RUN apk update && apk add gcompat
+#ENV LD_PRELOAD=/lib/libgcompat.so.0
+
+# 1) 계정 세팅
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+WORKDIR /home/appuser
+
+# 2) Jar 복사
+COPY --chown=appuser --from=builder /build/application/lib ./lib
+COPY --chown=appuser --from=builder /build/application/boot.jar ./boot.jar
+
+# 3) 변수 설정
+ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+EXPOSE 8080
+RUN java -jar -XX:ArchiveClassesAtExit=/home/appuser/application.jsa -Dspring.context.exit=onRefresh -Xms1g -Xmx2g boot.jar
+
+# 4) 실행
+ENTRYPOINT ["java", "-jar", "-Xlog:cds:file=dynamic-cds.log", "-Xlog:class+load:file=cds.log", "-XX:SharedArchiveFile=application.jsa", "-Xms1g","-Xmx2g", "boot.jar"]

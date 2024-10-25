@@ -41,6 +41,8 @@
 docker build -t demo-api:local .  && docker run -p 9090:8080  -e"SPRING_PROFILES_ACTIVE=local"  demo-api:local
 docker build -t demo-api:local -f Dockerfile_git . && docker run -p 9090:8080  -e"SPRING_PROFILES_ACTIVE=local"  demo-api:local
 docker build -t demo-api:local -f Dockerfile_aot . && docker run -p 9090:8080  -e"SPRING_PROFILES_ACTIVE=local"  demo-api:local
+docker build -t demo-api:local -f Dockerfile_cds . && docker run -p 9090:8080  -e"SPRING_PROFILES_ACTIVE=local"  demo-api:local
+docker-compose up
 ```
 
 ## 5. 주요 문제 정의 및 해결 전략

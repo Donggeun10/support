@@ -20,3 +20,13 @@ services:
         #command: "--port 9083"
         environment:
             - SPRING_PROFILES_ACTIVE=local
+    webapp-cds:
+        image: demo-cds-api:local
+        build:
+            context: ./
+            dockerfile: Dockerfile_cds
+        ports:
+            - "9092:8080"
+        #command: "--port 9083"
+        environment:
+            - SPRING_PROFILES_ACTIVE=local
