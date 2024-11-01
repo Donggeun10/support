@@ -71,6 +71,15 @@
             <classifier>jakarta</classifier>
         </dependency>
         <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+            <version>5.2.4</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
@@ -146,11 +155,19 @@
                         <buildArg>-H:SerializationConfigurationFiles=serialization-config.json</buildArg>
                         <buildArg>-H:ReflectionConfigurationFiles=reflect-config.json</buildArg>
                         <buildArg>-H:ResourceConfigurationFiles=resource-config.json</buildArg>-->
+                        <buildArg>-H:+AddAllCharsets</buildArg> <!-- https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-GraalVM#general -->
                         <buildArg>--static --libc=musl</buildArg>
                     </buildArgs>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
+    </repositories>
 
 </project>

@@ -1,0 +1,18 @@
+hazelcast:
+    cluster-name: hazelcast-stg-cluster
+    map:
+        products:
+            max-idle-seconds: 3600
+            eviction:
+                eviction-policy: LRU
+                max-size-policy: PER_NODE
+                size: 200
+    network:
+        join:
+            multicast:
+                enabled: false
+            kubernetes:
+                enabled: true
+                namespace: default
+                service-name: symbolicator-service
+                kubernetes-master: https://10.168.0.111

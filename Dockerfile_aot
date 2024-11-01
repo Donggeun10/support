@@ -49,7 +49,7 @@ ENV MAVEN_CONFIG $USER_HOME/.m2
 ENV PATH=$PATH:$MUSL_HOME/bin:$MAVEN_HOME/bin:$UPX_HOME
 
 # dependency caching
-WORKDIR /home/appuser
+WORKDIR $USER_HOME
 COPY pom.xml .
 RUN mvn -B dependency:resolve
 # source 복사 & package
@@ -72,13 +72,15 @@ FROM alpine:3.20
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
+ARG USER_HOME=/home/appuser
+
 # 2) Native 실행 파일 복사
-COPY --from=builder /home/appuser/target/boot /home/appuser
+COPY --from=builder $USER_HOME/target/boot $USER_HOME
 
 # 3) 변수 설정
 ENV SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
 EXPOSE 8080
 
 # 4) 실행
-WORKDIR /home/appuser
+WORKDIR $USER_HOME
 ENTRYPOINT ["./boot", "-Xms2g", "-Xmx2g", "-Djdk.virtualThreadScheduler.parallelism=10"]

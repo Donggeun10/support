@@ -16,7 +16,7 @@
 - spring-boot-data-jpa
 - spring-boot-security
 - spring-boot-cache
-- ehcache
+- ehcache / hazelcast
 - springdoc-openapi
 - h2database
 - lombok
@@ -64,3 +64,10 @@ docker-compose up
   - sam / ground
 - 방법
   - swagger-ui.html 에서 접속 후 테스트
+
+## 7. Ehcache 와 Hazelcast 적용에 관해서
+- Ehcache 는 로컬캐시로 AOT 컴파일을 통한 이미지 생성시에 적용 가능
+- Hazelcast 는 분산 클러스터 캐시로 사용할 수 있으나 AOT 컴파일을 통한 이미지 생성시에 적용이 어려움
+- Hazelcast 는 5.2.4 버전에서 이미지 생성 및 정상 실행이 되나, 이후 버전은 정식 지원이 되지 않음
+- Hazelcast 를 사용할 때 주변 노드 클러스터를 찾는 시간이 존재하여 AOT 컴파일의 장점인 빠른 실행을 기대하기 어렵다.  
+
