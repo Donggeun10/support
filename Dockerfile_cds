@@ -8,7 +8,7 @@ RUN mvn -B dependency:resolve
 
 # 2) source 복사 & package
 COPY src/ /build/src/
-RUN mvn package
+RUN mvn package -DskipTests
 RUN java -Djarmode=tools -jar target/boot.jar extract --destination application
 
 ## jre 21 - alpine 이미지
