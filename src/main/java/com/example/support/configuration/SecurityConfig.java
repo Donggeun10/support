@@ -1,5 +1,6 @@
 package com.example.support.configuration;
 
+import com.example.support.component.CachingOpaqueTokenIntrospector;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.util.StringUtils;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Slf4j
@@ -24,7 +26,7 @@ import org.springframework.web.cors.CorsConfiguration;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChainBasicAuth(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChainBasicAuth(HttpSecurity http, CachingOpaqueTokenIntrospector cachingOpaqueTokenIntrospector) throws Exception {
         http.csrf(csrfConfigurer ->
                       csrfConfigurer.ignoringRequestMatchers(new AntPathRequestMatcher("/api/v1/announcement/**"))
             ) // POST 를 차단하는 기능임
@@ -43,11 +45,21 @@ public class SecurityConfig {
                 config -> config.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/api-docs", "/swagger-ui.html","/actuator/**").permitAll()
                     .requestMatchers("/api/v1/announcement/**").authenticated()
                     .requestMatchers("/api/v1/announcements/**").authenticated()
-                    .requestMatchers("/").authenticated()
+                    .requestMatchers("/test/**").authenticated()
                     .anyRequest().denyAll()
             )
             .httpBasic(
                 httpBasicConfigurer -> httpBasicConfigurer.realmName("Announcement API")
+            )
+            .oauth2ResourceServer(oAuth2ResourceServerConfigurer -> oAuth2ResourceServerConfigurer
+                .bearerTokenResolver(request -> {
+                    String bearerToken = request.getHeader("Authorization");
+                    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+                        return bearerToken.substring(7);
+                    }
+                    return null;
+                })
+                .opaqueToken(opaqueToken -> opaqueToken.introspector(cachingOpaqueTokenIntrospector))
             );
 
 

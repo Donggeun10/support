@@ -21,7 +21,9 @@ public class LoggerFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        log.info("Logging Request {} : {}", servletRequest.getRemoteAddr(), servletRequest.getRemoteHost());
+        if(log.isDebugEnabled()) {
+            log.debug("Logging Request {} : {}", servletRequest.getRemoteAddr(), servletRequest.getRemoteHost());
+        }
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

@@ -54,7 +54,7 @@ COPY pom.xml .
 RUN mvn -B dependency:resolve
 # source 복사 & package
 #COPY src/test/resources/proxy-config.json proxy-config.json
-#COPY src/test/resources/serialization-config.json serialization-config.json
+COPY src/test/resources/serialization-config.json serialization-config.json
 #COPY src/test/resources/reflect-config.json reflect-config.json
 #COPY src/test/resources/resource-config.json resource-config.json
 COPY src/main/ src/main/

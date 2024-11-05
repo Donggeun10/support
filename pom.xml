@@ -71,6 +71,11 @@
             <classifier>jakarta</classifier>
         </dependency>
         <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId> <!-- in order to expire caches -->
+        </dependency>
+
+        <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast-spring</artifactId>
         </dependency>
@@ -83,6 +88,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.okta.spring</groupId>
+            <artifactId>okta-spring-boot-starter</artifactId>
+            <version>3.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
@@ -152,9 +168,9 @@
                         <!--<buildArg>&#45;&#45;initialize-at-build-time=com.thoughtworks.xstream.mapper.EnumMapper</buildArg>-->
                         <!--<buildArg>&#45;&#45;initialize-at-run-time=com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider</buildArg>-->
                         <!--<buildArg>-H:DynamicProxyConfigurationFiles=proxy-config.json</buildArg>
-                        <buildArg>-H:SerializationConfigurationFiles=serialization-config.json</buildArg>
                         <buildArg>-H:ReflectionConfigurationFiles=reflect-config.json</buildArg>
                         <buildArg>-H:ResourceConfigurationFiles=resource-config.json</buildArg>-->
+                        <buildArg>-H:SerializationConfigurationFiles=serialization-config.json</buildArg>
                         <buildArg>-H:+AddAllCharsets</buildArg> <!-- https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-with-GraalVM#general -->
                         <buildArg>--static --libc=musl</buildArg>
                     </buildArgs>

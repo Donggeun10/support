@@ -1,5 +1,6 @@
 package com.example.support.component;
 
+import com.example.support.configuration.CacheConfig;
 import com.example.support.entity.Member;
 import com.example.support.repository.MemberRepository;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class UserAccountDetails implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Cacheable(value = "member", key = "#username")
+    @Cacheable(value = CacheConfig.APPS, key = "#username")
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
