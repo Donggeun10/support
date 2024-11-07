@@ -1,17 +1,16 @@
-# Backend Server 주요 개발 내용
-- Spring Boot 기반의 RESTful API 서버 구현
-- RestControllerAdvice 와 ExceptionHandler 를 이용한 예외 처리
-- H2 Database 를 이용한 데이터 저장 및 조회
-- Spring Data JPA 를 이용한 데이터 CRUD
-- LockModeType.PESSIMISTIC_WRITE 를 이용한 데이터 동시성 제어
-- Springdoc-openapi 를 이용한 API 문서화
-- Lombok 을 이용한 코드 간소화
-- Docker 를 이용한 이미지 생성 및 실행
-- Aspect 와  @Around 를 이용한 로깅
+# Backend Server Features
+- RESTful API Server Sample code based on Spring boot
+- Major Exceptions are managed by RestControllerAdvice and ExceptionHandler
+- Database such as H2DB is accessed such as insert, select, update and delete (CRUD) via Spring Data JPA
+- It controls race condition using LockModeType.PESSIMISTIC_WRITE provided JPA
+- API Documentation using Springdoc-openapi
+- Code simplification using Lombok
+- Container creation and execution using Docker
+- Logging using Aspect and @Around
 
 ## 1. Frameworks And Tools
 - JDK 21
-- spring-boot 3.3.2
+- spring-boot 3.3.5
 - spring-boot-web
 - spring-boot-data-jpa
 - spring-boot-security
@@ -21,11 +20,10 @@
 - h2database
 - lombok
 
-## 2. Api Spec 확인 주소
+## 2. Api Spec URL
 - http://localhost:8080/swagger-ui.html
 
-## 3. 주요 Endpoints
-
+## 3. Endpoints
 - GET /api/v1/announcements
 - GET /api/v1/announcements/page
 - GET /api/v1/announcement/id/{id}
@@ -35,7 +33,7 @@
 - DELETE /api/v1/announcement/id/{id}
 - DELETE /api/v1/announcement/id/{id}/file-id/{fileId}
 
-## 4. Docker Image 생성 및 실행 명령어 
+## 4. Docker container creation and execution command 
 
 ```
 docker build -t demo-api:local .  && docker run -p 9090:8080  -e"SPRING_PROFILES_ACTIVE=local"  demo-api:local
@@ -45,29 +43,32 @@ docker build -t demo-api:local -f Dockerfile_cds . && docker run -p 9090:8080  -
 docker-compose up
 ```
 
-## 5. 주요 문제 정의 및 해결 전략
-- 동시에 같은 공지 사항을 변경 하거나 읽는 요청이 다수일 때에 대한 문제
-  - DB 테이블 내 lock 을 통해 변경 중 타 세션의 접근을 제한 하도록 적용
-- 데이터 조회 요청이 많은 문제
-  - virtual thread 적용을 통한 비동기 처리 
-  - jdk.virtualThreadScheduler.parallelism 를 통한 병렬 처리
-  - 캐시를 통해서 반복적으로 같은 데이터에 대한 요청에 대한 DB 조회를 최소화 함
-- 보안 문제
-  - spring security를 통한 범용적 보안 설정 적용
-  - basic authentication 을 통해서 인증된 사용자만 API에 접근 가능 하도록 적용
-- 인스턴스 시작 시간 및 라이브러리 로딩 문제
-  - AOT 컴파일을 통한 이미지 생성을 통해 인스턴스 시작 시간을 최소화
+## 5. Definition of key problems and solution strategies
+- Race condition problem of database access
+  - Apply to restrict access to other sessions during change through lock such as LockModeType.PESSIMISTIC_WRITE (for update) in DB table row
+- Lack of memory problem by increasing platform threads
+  - In order to reduce memory usage per request, using virutal thread
+  - Parallel processing through jdk.virtualThreadScheduler.parallelism setting, default value is number of cpu core
+- Security Problem
+  - Apply universal security configuration to handle spring security
+  - Only authenticated users can access the API through basic authentication or OAuth Token
+- Problem of frequently access database for authentication in short time
+  - Apply local cache through Ehcache
+  - Apply cache data sharing through Hazelcast clustering
+- Instance startup time and library loading issues
+  - Minimize instance startup time through image creation through Graalvm AOT compilation
 
-## 6. 테스트 계정 및 방법
-- 테스트 계정
+## 6. Test account and method  
+- account
   - robot / play
   - sam / ground
-- 방법
-  - swagger-ui.html 에서 접속 후 테스트
+- method
+  - swagger-ui.html
 
-## 7. Ehcache 와 Hazelcast 적용에 관해서
-- Ehcache 는 로컬캐시로 AOT 컴파일을 통한 이미지 생성시에 적용 가능
-- Hazelcast 는 분산 클러스터 캐시로 사용할 수 있으나 AOT 컴파일을 통한 이미지 생성시에 적용이 어려움
-- Hazelcast 는 5.2.4 버전에서 이미지 생성 및 정상 실행이 되나, 이후 버전은 정식 지원이 되지 않음
-- Hazelcast 를 사용할 때 주변 노드 클러스터를 찾는 시간이 존재하여 AOT 컴파일의 장점인 빠른 실행을 기대하기 어렵다.  
+## 7. Effective cache enginees adaption via ehcache or hazelcast
+- Ehcache can be compiled to native image by GraalVM in order for local caching and executed properly
+- It is hard to compile Hazelcast native image via GraalVM, and Hazelcast might not be supported officially
+- SpringBoot cache with Hazelcast 5.2.4 is compiled by GraalVM native image and executed properly, however, another Hazelcast versions such as over 
+  5.2.4 can be compiled but occurred runtime error.
+- When application is started, Hazelcast needs to get cluster information and make a clustering. so it has needed to time to complete Clustering and synchronizing cache data. 
 

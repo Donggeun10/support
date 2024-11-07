@@ -29,7 +29,7 @@ public class SupportRuntimeHints implements RuntimeHintsRegistrar {
         // Register resources
         hints.resources().registerPattern("*.yml");
 
-        // Register serialization
+        // Register serialization // private class will be registered manually
         hints.serialization().registerType(org.springframework.security.core.userdetails.User.class);
         hints.serialization().registerType(org.springframework.security.oauth2.core.DefaultOAuth2AuthenticatedPrincipal.class);
         hints.serialization().registerType(net.minidev.json.JSONObject.class);

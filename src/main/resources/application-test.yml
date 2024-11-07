@@ -3,7 +3,7 @@ logging:
         root: info
         org.springframework.cache: trace
         com.example.support: debug
-        com.hazelcast: debug
+        com.hazelcast: info
 server:
     port: 8080
     shutdown: graceful
