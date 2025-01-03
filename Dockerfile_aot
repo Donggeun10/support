@@ -42,8 +42,8 @@ WORKDIR $USER_HOME
 ARG MAVEN_VERSION=3.9.9
 RUN wget http://dlcdn.apache.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz
 RUN tar -xvf apache-maven-$MAVEN_VERSION-bin.tar.gz
-ENV MAVEN_HOME $USER_HOME/apache-maven-$MAVEN_VERSION
-ENV MAVEN_CONFIG $USER_HOME/.m2
+ENV MAVEN_HOME=$USER_HOME/apache-maven-$MAVEN_VERSION
+ENV MAVEN_CONFIG=$USER_HOME/.m2
 
 # SET PATH
 ENV PATH=$PATH:$MUSL_HOME/bin:$MAVEN_HOME/bin:$UPX_HOME

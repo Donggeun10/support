@@ -65,10 +65,19 @@ docker-compose up
 - method
   - swagger-ui.html
 
-## 7. Effective cache enginees adaption via ehcache or hazelcast
+## 7. Effective cache engines adaption via ehcache or hazelcast
 - Ehcache can be compiled to native image by GraalVM in order for local caching and executed properly
 - It is hard to compile Hazelcast native image via GraalVM, and Hazelcast might not be supported officially
 - SpringBoot cache with Hazelcast 5.2.4 is compiled by GraalVM native image and executed properly, however, another Hazelcast versions such as over 
   5.2.4 can be compiled but occurred runtime error.
 - When application is started, Hazelcast needs to get cluster information and make a clustering. so it has needed to time to complete Clustering and synchronizing cache data. 
 
+## 8. Native image size and startup time
+- GraalVM 21.0.2
+  - The size of native image is about 66.9MB
+  - The startup time of native image is about 1.351s
+- GraalVM 23 
+  - https://medium.com/graalvm/welcome-graalvm-for-jdk-23-203928491b2b  
+  - https://github.com/oracle/graal/issues/7626
+  - ~~The size of native image is about 66.9MB~~
+  - ~~The startup time of native image is about 1.351s~~
