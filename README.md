@@ -7,6 +7,8 @@
 - Code simplification using Lombok
 - Container creation and execution using Docker
 - Logging using Aspect and @Around
+- Add security configuration using Spring Security such as basic authentication
+- Add link to response using HATEOAS
 
 ## 1. Frameworks And Tools
 - JDK 21
@@ -19,6 +21,7 @@
 - springdoc-openapi
 - h2database
 - lombok
+- spring-boot-hateoas
 
 ## 2. Api Spec URL
 - http://localhost:8080/swagger-ui.html

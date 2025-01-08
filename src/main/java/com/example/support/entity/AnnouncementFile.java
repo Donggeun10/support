@@ -41,7 +41,7 @@ public class AnnouncementFile implements Serializable { // 제목, 내용, 작�
 	private String path;
 
 	@CreationTimestamp
-	@Column(name = "inserted_datetime")
+	@Column(name = "inserted_datetime", updatable = false)
 	@Schema(type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp insertedDatetime;
 

@@ -2,7 +2,7 @@ logging:
     level:
         root: info
         org.springframework: info
-        org.springframework.cache: trace
+        org.springframework.cache: info
         com.example.support: debug
 
 server:

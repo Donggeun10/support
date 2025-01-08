@@ -29,7 +29,7 @@ public class AnnouncementCreateService {
 		
 		try {
 			if(isNoAttachedFiles(files)) {
-				return;
+				files = new ArrayList<>();
 			}
 
 			List<AnnouncementFile> announcementFiles = new ArrayList<>();
@@ -41,7 +41,9 @@ public class AnnouncementCreateService {
 						.build();
 				announcementFiles.add(announcementFile);
 			}
-			announcement.setFiles(announcementFiles);
+			if(!announcementFiles.isEmpty()) {
+				announcement.setFiles(announcementFiles);
+			}
 
 			announcementRespository.save(announcement);
 
