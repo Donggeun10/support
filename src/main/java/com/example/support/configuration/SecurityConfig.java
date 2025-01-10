@@ -29,6 +29,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChainBasicAuth(HttpSecurity http, CachingOpaqueTokenIntrospector cachingOpaqueTokenIntrospector) throws Exception {
         http.csrf(csrfConfigurer ->
                       csrfConfigurer.ignoringRequestMatchers(new AntPathRequestMatcher("/api/v1/announcement/**"))
+                          .ignoringRequestMatchers(new AntPathRequestMatcher("/v1/sse/**"))
+
             ) // POST 를 차단하는 기능임
             .cors(corsConfigurer ->
                     corsConfigurer.configurationSource(request -> {
@@ -46,6 +48,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/v1/announcement/**").authenticated()
                     .requestMatchers("/api/v1/announcements/**").authenticated()
                     .requestMatchers("/test/**").authenticated()
+                    .requestMatchers("/v1/sse/**").permitAll()
                     .anyRequest().denyAll()
             )
             .httpBasic(

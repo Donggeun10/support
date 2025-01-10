@@ -9,6 +9,7 @@
 - Logging using Aspect and @Around
 - Add security configuration using Spring Security such as basic authentication
 - Add link to response using HATEOAS
+- Add Server-Sent Event (SSE) example for real-time notification 
 
 ## 1. Frameworks And Tools
 - JDK 21
