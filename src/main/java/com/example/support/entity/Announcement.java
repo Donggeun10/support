@@ -51,12 +51,12 @@ public class Announcement implements Serializable { // 제목, 내용, 작성자
 	private String writer;
 
 	@CreationTimestamp
-	@Column(name = "inserted_datetime", updatable = false)
+	@Column(name = "inserted_datetime", nullable = false, updatable = false)
 	@Schema(type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp insertedDatetime;
 
 	@UpdateTimestamp
-	@Column(name = "updated_datetime")
+	@Column(name = "updated_datetime", insertable = false)
 	@Schema(type = "string", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp updatedDatetime;
 

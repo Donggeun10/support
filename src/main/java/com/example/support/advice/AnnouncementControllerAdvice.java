@@ -1,53 +1,68 @@
 package com.example.support.advice;
 
-import com.example.support.domain.ErrorResponse;
 import com.example.support.exception.BadRequestNoContentPageException;
 import com.example.support.exception.DataSaveException;
 import com.example.support.exception.NotFoundAnnouncementException;
 import com.example.support.util.DataUtil;
+import java.time.Instant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
 public class AnnouncementControllerAdvice {
 
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(DataSaveException.class)
-	public ErrorResponse serverException(DataSaveException dataSaveException) {
+	public ProblemDetail serverException(DataSaveException dataSaveException) {
+
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "데이터 저장 중 오류가 발생했습니다.");
+		problemDetail.setTitle("Data Save Error");
+		problemDetail.setProperty("errorCategory", "Save");
+		problemDetail.setProperty("timestamp", Instant.now());
 
 		log.error(DataUtil.makeErrorLogMessage(dataSaveException));
-		return new ErrorResponse("데이터 저장 중 오류가 발생했습니다.");
+		return problemDetail;
 	}
 
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(BadRequestNoContentPageException.class)
-	public ErrorResponse serverException(BadRequestNoContentPageException badRequestNoContentPageException) {
+	public ProblemDetail serverException(BadRequestNoContentPageException badRequestNoContentPageException) {
+
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NO_CONTENT, badRequestNoContentPageException.getMessage());
+		problemDetail.setTitle("Announcement Content page Not Found ");
+		problemDetail.setProperty("errorCategory", "Retrieval");
+		problemDetail.setProperty("timestamp", Instant.now());
 
 		log.error(DataUtil.makeErrorLogMessage(badRequestNoContentPageException));
-		return new ErrorResponse(badRequestNoContentPageException.getMessage());
+		return problemDetail;
 	}
 
 	@ExceptionHandler(NotFoundAnnouncementException.class)
-	public ResponseEntity<ErrorResponse> notFoundAnnouncement(NotFoundAnnouncementException e) {
+	public ProblemDetail notFoundAnnouncement(NotFoundAnnouncementException e) {
 
-		ErrorResponse errorRes = new ErrorResponse(e.getMessage());
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+		problemDetail.setTitle("Announcement Not Found ");
+		problemDetail.setProperty("errorCategory", "Retrieval");
+		problemDetail.setProperty("timestamp", Instant.now());
+
 		log.error(DataUtil.makeErrorLogMessage(e));
 
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorRes);
+		return problemDetail;
 	}
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
-	public ResponseEntity<ErrorResponse> dataIntegrityViolation(DataIntegrityViolationException e) {
+	public ProblemDetail dataIntegrityViolation(DataIntegrityViolationException e) {
 
-		ErrorResponse errorRes = new ErrorResponse(e.getMessage());
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+		problemDetail.setTitle("Data Save Error");
+		problemDetail.setProperty("errorCategory", "Save");
+		problemDetail.setProperty("timestamp", Instant.now());
+
 		log.error(DataUtil.makeErrorLogMessage(e));
 
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorRes);
+		return problemDetail;
 	}
 }

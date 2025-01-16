@@ -3,3 +3,6 @@ spring:
         name: boot
     profiles:
         active: local
+    mvc:
+        problemdetails:
+            enabled: true
