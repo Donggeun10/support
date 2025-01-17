@@ -1,0 +1,14 @@
+logging:
+    level:
+        root: info
+        org.springframework: info
+        org.springframework.cache: info
+        com.example.support: debug
+        org.testcontainers: debug
+
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:33066/app
+        username: test
+        password: test
