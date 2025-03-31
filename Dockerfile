@@ -23,4 +23,4 @@ COPY --chown=appuser --from=builder /build/application/lib ./lib
 COPY --chown=appuser --from=builder /build/application/boot.jar ./boot.jar
 
 # 3) 실행
-ENTRYPOINT ["java", "-jar", "boot.jar"]
+ENTRYPOINT ["java", "-Djdk.tracePinnedThreads=full", "-Djdk.virtualThreadScheduler.parallelism=10", "-jar", "boot.jar"]
