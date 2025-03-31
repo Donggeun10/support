@@ -16,15 +16,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class AnnouncementControllerAdvice {
 
+	private static final String ERROR_CATEGORY = "errorCategory";
+	private static final String TIMESTAMP = "timestamp";
+
 	@ExceptionHandler(DataSaveException.class)
 	public ProblemDetail serverException(DataSaveException dataSaveException) {
 
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "데이터 저장 중 오류가 발생했습니다.");
 		problemDetail.setTitle("Data Save Error");
-		problemDetail.setProperty("errorCategory", "Save");
-		problemDetail.setProperty("timestamp", Instant.now());
+		problemDetail.setProperty(ERROR_CATEGORY, "Save");
+		problemDetail.setProperty(TIMESTAMP, Instant.now());
 
 		log.error(DataUtil.makeErrorLogMessage(dataSaveException));
+
 		return problemDetail;
 	}
 
@@ -33,10 +37,11 @@ public class AnnouncementControllerAdvice {
 
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NO_CONTENT, badRequestNoContentPageException.getMessage());
 		problemDetail.setTitle("Announcement Content page Not Found ");
-		problemDetail.setProperty("errorCategory", "Retrieval");
-		problemDetail.setProperty("timestamp", Instant.now());
+		problemDetail.setProperty(ERROR_CATEGORY, "Retrieval");
+		problemDetail.setProperty(TIMESTAMP, Instant.now());
 
 		log.error(DataUtil.makeErrorLogMessage(badRequestNoContentPageException));
+
 		return problemDetail;
 	}
 
@@ -45,8 +50,8 @@ public class AnnouncementControllerAdvice {
 
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
 		problemDetail.setTitle("Announcement Not Found ");
-		problemDetail.setProperty("errorCategory", "Retrieval");
-		problemDetail.setProperty("timestamp", Instant.now());
+		problemDetail.setProperty(ERROR_CATEGORY, "Retrieval");
+		problemDetail.setProperty(TIMESTAMP, Instant.now());
 
 		log.error(DataUtil.makeErrorLogMessage(e));
 
@@ -58,8 +63,8 @@ public class AnnouncementControllerAdvice {
 
 		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
 		problemDetail.setTitle("Data Save Error");
-		problemDetail.setProperty("errorCategory", "Save");
-		problemDetail.setProperty("timestamp", Instant.now());
+		problemDetail.setProperty(ERROR_CATEGORY, "Save");
+		problemDetail.setProperty(TIMESTAMP, Instant.now());
 
 		log.error(DataUtil.makeErrorLogMessage(e));
 
